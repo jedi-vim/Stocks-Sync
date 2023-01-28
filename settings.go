@@ -1,4 +1,4 @@
-package utils
+package main
 
 import (
     "log"
@@ -9,7 +9,7 @@ import (
 
 type Settings struct{
     DocumentID                     string  `env:"DOCUMENT_ID"`
-    SheetCellRange                 string  `env:SHEET_CELL_RANGE`
+    SheetCellRange                 string  `env:"SHEET_CELL_RANGE"`
     GoogleApplicationCredentials   string  `env:"GOOGLE_APPLICATION_CREDENTIALS"`
     GoogleOAuthCredentials         string  `env:"GOOGLE_OAUTH_CREDENTIALS"`
     GoogleTokenFile                string  `env:"GOOGLE_TOKEN_FILE"`
