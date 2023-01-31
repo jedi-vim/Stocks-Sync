@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"os"
-	"os/exec"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
@@ -22,10 +21,10 @@ type RedirectURL struct{
     Scope   []string    `form:"scope"`
 }
 
-func GetTokenFromWeb(config *oauth2.Config){
-    url := fmt.Sprintf("%v", config.AuthCodeURL("state-token", oauth2.AccessTypeOffline))
-    err := exec.Command("python", "-m", "webbrowser", url).Run()
-    CheckError(err)
+func GetGrantUrl(ctx context.Context) (url string){
+    config := GetGoogleConfig(ctx.Value("env").(Settings))
+    url = fmt.Sprintf("%v", config.AuthCodeURL("state-token", oauth2.AccessTypeOffline))
+    return
 }
 
 func RunGinServer(ctx context.Context, ch chan *oauth2.Token){
@@ -70,7 +69,7 @@ func GetHttpClient(ctx context.Context)(*http.Client){
         ctx = context.WithValue(ctx, "config", config)
         ch := make(chan *oauth2.Token)
         go RunGinServer(ctx, ch)
-        GetTokenFromWeb(config)
+        GetGrantUrl(ctx)
         tok = <-ch
         SaveToken(env.GoogleTokenFile, tok)
     }
