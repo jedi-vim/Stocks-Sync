@@ -3,5 +3,6 @@ RUN mkdir /app
 ADD . /app
 WORKDIR /app
 RUN go mod download
-RUN go build -o main .
+RUN mkdir bin
+RUN go build -o bin/stocks-sync .
 CMD ["/app/main"]
