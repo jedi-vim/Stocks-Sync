@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"net/http"
 
@@ -49,10 +50,10 @@ func RunGinServer(ctx context.Context, ch chan *oauth2.Token){
 }
 
 func GetGoogleConfig(env Settings)(*oauth2.Config){
-    credentialJson, err := os.ReadFile(env.GoogleOAuthCredentials)
+    b64Credentials, err := base64.StdEncoding.DecodeString(env.GoogleOAuthCredentials)
     CheckError(err)
     config, err := google.ConfigFromJSON(
-        credentialJson, 
+        b64Credentials, 
         sheets.SpreadsheetsScope,
         sheets.SpreadsheetsReadonlyScope,
     )
