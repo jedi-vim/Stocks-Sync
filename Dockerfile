@@ -1,8 +1,15 @@
-FROM golang:1.12.0-alpine3.9
+FROM golang:1.20.0-bullseye
+
+ENV PORT=${PORT}
+
 RUN mkdir /app
+RUN mkdir /app/bin
+
 ADD . /app
 WORKDIR /app
+
 RUN go mod download
-RUN mkdir bin
+
 RUN go build -o bin/stocks-sync .
-CMD ["/app/main"]
+
+CMD ["/app/bin/stocks-sync"]

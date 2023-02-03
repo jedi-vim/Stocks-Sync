@@ -75,5 +75,4 @@ func main() {
     r.GET("/update", UpdateStocks)
     r.GET("/grant-permissions", GrantOauthPermission)
     r.Run()
-
 }

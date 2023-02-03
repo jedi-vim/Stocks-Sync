@@ -1,9 +1,10 @@
 name: Push Container to Heroku
 
 on: 
+  push:
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
