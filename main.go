@@ -54,14 +54,16 @@ func GrantOauthPermission(c * gin.Context){
 func GrantOauthPostback(c *gin.Context){
     var urlQueryData RedirectURL
     if err := c.ShouldBind(&urlQueryData); err != nil{
-        c.JSON(400, gin.H{"msg": err})
+        log.Println(err)
+        c.JSON(400, gin.H{"msg": "Olhe os logs"})
         return
     }
     env := c.Value("env").(Settings)
     config := GetGoogleConfig(env)
     tok, err := config.Exchange(context.Background(), urlQueryData.Code)
     if err != nil{
-        c.JSON(400, gin.H{"msg": err})
+        log.Println(err)
+        c.JSON(400, gin.H{"msg": "Olhe os logs"})
         return
     }
     SaveToken(env.GoogleTokenFile, tok)
