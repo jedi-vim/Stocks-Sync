@@ -1,15 +1,18 @@
-FROM golang:1.20.0-bullseye
+FROM golang:1.18.10 as builder
 
-ENV PORT=${PORT}
+RUN mkdir /build
+ADD *.go *.mod *.sum /build/
+WORKDIR /build
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o stocks-sync .
+
+FROM alpine:3.11.13
 
 RUN mkdir /app
 RUN mkdir /app/bin
 
-ADD . /app
+COPY --from=builder /build/stocks-sync /app/bin/
 WORKDIR /app
-
-RUN go mod download
-
-RUN go build -o bin/stocks-sync .
-
+ENV PORT=${PORT}
+EXPOSE ${PORT}
 CMD ["/app/bin/stocks-sync"]
