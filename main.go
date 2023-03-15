@@ -27,12 +27,12 @@ func UpdateStocks(c *gin.Context) {
 
         stockCodesRange, err := sheetsService.Spreadsheets.Values.Get(env.DocumentID, env.SheetCellRange).Do()
         if err != nil{
-            c.JSON(500, gin.H{"message": err})
+            c.String(500, fmt.Sprintf("%v", err))
         }
         for idx, stockData := range stockCodesRange.Values{
             bmfCode := fmt.Sprintf("%v", stockData[0])
             stockPrice := GetStockPrice(bmfCode)
-            stockCodesRange.Values[idx][1] = stockPrice
+            stockCodesRange.Values[idx][7] = stockPrice
             log.Printf("%s atualizada\n", bmfCode)
             // time.Sleep(1 * time.Second)
         }
@@ -41,7 +41,7 @@ func UpdateStocks(c *gin.Context) {
             stockCodesRange.Range, 
             stockCodesRange).ValueInputOption("USER_ENTERED").Do()
         if err != nil{
-            c.JSON(500, gin.H{"message": err})
+            c.String(500, fmt.Sprintf("%v", err))
         }
         c.JSON(200, gin.H{"message": fmt.Sprintf("%d Valores alterados com sucesso", response.UpdatedRows)})
 }
